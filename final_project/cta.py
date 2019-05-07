@@ -24,6 +24,7 @@ class CTA:
         return self.get_filename().split('.')[0]
     def get_affine(self):
         return self.img.affine
+
     # methods for computing single MIP and single MIP sequence
     def load_head_box(self, excel_path, sheet):
         record_df = pd.read_excel(excel_path, sheet_name=sheet, index_col='patient id')
@@ -108,6 +109,7 @@ class CTA:
             print("Error, please check the axis parameter or file dimension matches...")
             sys.exit(1)
         return np.array(occl_slices)
+
     # methods for computing patient-wise MIPs and MIP sequences (train/validation sets, or test sets)
     def mip_seqs_dataset(self, num_slices=20, box=None, axis='x', num_neighbors=1, anno_obj=None):
         mip_seqs_data = dict()
@@ -154,6 +156,7 @@ class CTA:
                     mip_seqs_data[mip_seq_info] = (mip_seq, 0)
         print("MIP sequences of patient {} have been successfully computed".format(patient_id))
         return mip_seqs_data
+    # methods for computing patient-wise MIP sequences for test sets
     def mip_seqs_testset(self, num_slices=20, box=None, axis='x', num_neighbors=1):
         mip_seqs_data = dict()
         # return bounding box for brain area if there exists one, otherwise use the entire source CTA
@@ -196,6 +199,7 @@ class CTAs:
         self.anno_path = anno_dir
         self.cta_paths = [os.path.join(self.src_path, file) for file in os.listdir(self.src_path)]
         self.cta_objs = [CTA(cta_path) for cta_path in self.cta_paths]
+
     # generate train/validation MIP sequences on the fly
     def mip_seqs_dataset(self, num_slices=20, box_info=None, axis='x', num_neighbors=1):
         mip_seq_data = dict()
@@ -330,6 +334,7 @@ class MIP_Seq_Dataset:
             self.mip_seq_dataset = {mip_seq_info : (mip_seqs, seqs_label)
                                     for cta_mip_seqs in cta_dir_mip_seqs
                                         for mip_seq_info, (mip_seqs, seqs_label) in cta_mip_seqs.items()}
+
     def train_val_split(self, test_ratio, balanced=False, random_seed=0):
         if self.test:
             print("Current dataset only consists of MIP sequences for test, not valid for train/validation split...")
@@ -355,6 +360,7 @@ class MIP_Seq_Dataset:
 ###################################################################################################################
 
 if __name__ == "__main__":
+    # some unit tests 
     sample = '../data/processed/control'
     anno = '../data/processed/occlusion_annotation'
     excel = '../data/processed/train_val_data_annotations.xlsx'
