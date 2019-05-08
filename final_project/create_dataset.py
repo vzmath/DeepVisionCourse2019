@@ -37,7 +37,7 @@ def create_dataset():
 def create_testset():
     pos_dir = "../data/source/patient_wise_test_data/positive"
     neg_dir = "../data/source/patient_wise_test_data/negative"
-    root = "/media/vince/FreeAgent Drive/cta_mip_seqs"
+    root = "/media/vince/FreeAgent Drive/test_seqs"
     excel = "../data/processed/test_data_annotations.xlsx"
     pos_sheet, neg_sheet = "occlusion", "control"
     pos_box_info, neg_box_info = (excel, pos_sheet), (excel, neg_sheet)
@@ -47,7 +47,7 @@ def create_testset():
     axis = 'z'
 
     pos_ctas = CTAs(pos_dir)
-    neg_ctas = CTAs(neg_dir)
+    #neg_ctas = CTAs(neg_dir)
     pos_ctas.save_mip_seqs_testset(
                 dir=root,
                 img_format=format,
@@ -56,6 +56,7 @@ def create_testset():
                 axis=axis,
                 num_neighbors=n_neighbors,
                 pos=True)
+    '''
     neg_ctas.save_mip_seqs_testset(
                 dir=root,
                 img_format=format,
@@ -64,7 +65,7 @@ def create_testset():
                 axis=axis,
                 num_neighbors=n_neighbors,
                 pos=False)
-
+    '''
 # train/validation split for precomputed MIP sequences
 def train_val_split(root, pos_dir, neg_dir, test_ratio, balanced=False, random_seed=0):
     pos_seqs_dir = os.path.join(root, pos_dir)
