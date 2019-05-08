@@ -186,7 +186,7 @@ class CTA:
                 mip_seq, seq_idx_info = self.mip_seqs(current_start_slice, current_end_slice, axis, box, num_neighbors)
                 seq_start_idx, seq_end_idx = seq_idx_info
                 mip_seq_info = (patient_id, seq_start_idx, seq_end_idx)
-            mip_seqs_data[mip_seq_info] = mip_seq
+                mip_seqs_data[mip_seq_info] = mip_seq
         print("MIP sequences of patient {} have been successfully computed".format(patient_id))
         return mip_seqs_data
 ###################################################################################################################
@@ -199,7 +199,6 @@ class CTAs:
         self.anno_path = anno_dir
         self.cta_paths = [os.path.join(self.src_path, file) for file in os.listdir(self.src_path)]
         self.cta_objs = [CTA(cta_path) for cta_path in self.cta_paths]
-
     # generate train/validation MIP sequences on the fly
     def mip_seqs_dataset(self, num_slices=20, box_info=None, axis='x', num_neighbors=1):
         mip_seq_data = dict()
@@ -360,7 +359,7 @@ class MIP_Seq_Dataset:
 ###################################################################################################################
 
 if __name__ == "__main__":
-    # some unit tests 
+    # some unit tests
     sample = '../data/processed/control'
     anno = '../data/processed/occlusion_annotation'
     excel = '../data/processed/train_val_data_annotations.xlsx'

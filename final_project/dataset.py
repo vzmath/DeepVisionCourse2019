@@ -54,6 +54,30 @@ class MIPSeqDataset(Dataset):
             mip_seq.append(mip)
         return torch.stack(mip_seq), seq_label
 
+class MIPSeqTestset(Dataset):
+    def __init__(self, patient_dir, transform=None):
+        self.root = patient_dir
+        self.seq_paths = [os.path.join(self.root, seq_dir) for seq_dir in os.listdir(self.root)]
+    def __len__(self):
+        return len(self.seq_paths)
+    def __getitem__(self, index):
+        seq_path = self.seq_paths[index]
+        seq_len = len(os.listdir(seq_path))
+        mip_seq = list()
+        # extract prefix in the filename and sort the MIP sequences in order
+        file, ext = os.listdir(seq_path)[0].split('.')
+        prefix = '_'.join(file.split('_')[:-1])
+        for seq_idx in np.arange(1, seq_len+1):
+            mip_filename = "{}_{}.{}".format(prefix, seq_idx, ext)
+            mip_path = os.path.join(seq_path, mip_filename)
+            mip = nib.load(mip_path).get_fdata()
+            if self.transform:
+                mip = self.transform( Image.fromarray(mip, mode='RGB') )
+            else:
+                mip = Image.fromarray(mip, mode='RGB')
+            mip_seq.append(mip)
+        return torch.stack(mip_seq)
+
 if __name__ == "__main__":
     root = "/media/vince/FreeAgent Drive/cta_mip_seqs"
     pos_dir = "occlusion"
